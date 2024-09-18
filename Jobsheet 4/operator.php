@@ -58,4 +58,5 @@ $totalKursi = 45;
 $kursiDipakai = 28;
 $persenKursi = ($kursiDipakai/$totalKursi) * 100;
 echo "hasil $kursiDipakai / $totalKursi adalah $persenKursi";
+
 ?>

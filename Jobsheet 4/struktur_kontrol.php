@@ -49,4 +49,38 @@ foreach ($nilaiSiswa as $nilai) {
     }
     echo "Nilai: $nilai (Lulus)<br>";
 }
+echo "<br>";
+
+
+$nilaiSiswa = [85, 92, 78, 64, 90, 75, 88, 79, 70, 96];
+$totalNilai = 0;
+
+
+foreach ($nilaiSiswa as $nilai) {
+    if ($nilai >= 92 || $nilai <= 70) {
+        continue;
+    }
+    $totalNilai += $nilai;
+    $avg = $totalNilai / count($nilaiSiswa);
+}
+echo "Rata-rata nilai: $avg <br><br>";
+
+
+$totalPembelian = 106000;
+$hargaProduk = 120000;
+$diskon = 0.2;
+
+if ($totalPembelian > 100000) {
+    $hargaDiskon = $hargaProduk - ($hargaProduk * $diskon);
+    echo "Harga Setelah Diskon: $hargaDiskon";
+} else {
+    echo "Harga Normal: $hargaProduk";
+}
+
+echo "<br><br>";
+
+$skor = 500;
+echo "Total Skor Pemain Adalah: $skor. <br>";
+echo "Apakah pemain mendapatkan hadiah tambahan? ";
+echo ($skor > 500) ? "<b>YES</b>" : "<b>NO</b>";
 ?>

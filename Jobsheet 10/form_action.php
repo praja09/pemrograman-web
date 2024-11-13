@@ -17,8 +17,8 @@ if ($id == "") {
     $query = "UPDATE anggota SET nama=?, jenis_kelamin=?, alamat=?, no_telp=? WHERE id=?";
     $sql = $db1->prepare($query);
     $sql->bind_param("ssssi", $nama, $jenis_kelamin, $alamat, $no_telp, $id);
+    $sql->execute();
 }
-$sql->execute();
 
 echo json_encode(['success' => 'Sukses']);
 

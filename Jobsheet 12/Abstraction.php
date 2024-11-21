@@ -9,10 +9,8 @@ class Circle extends Shape {
         $this->radius = $radius;
     }
 
-    public function   
- calculateArea() {
-        return pi() * pow($this->radius,   
- 2);
+    public function calculateArea() {
+        return pi() * pow($this->radius, 2);
     }
 }
 

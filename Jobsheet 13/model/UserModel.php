@@ -16,27 +16,22 @@ class UserModel extends Model{
     public function insertData($data){ 
         if($this->driver == 'mysql'){ 
             // prepare statement untuk query insert 
-            $query = $this->db->prepare("insert into {$this->table} (username, nama, level, 
-password) values(?,?,?,?)"); 
+            $query = $this->db->prepare("insert into {$this->table} (username, nama, level, password) values(?,?,?,?)"); 
  
             // binding parameter ke query, "s" berarti string, "ss" berarti dua string 
-            $query->bind_param('ssss', $data['username'], $data['nama'], $data['level'], 
-password_hash($data['password'], PASSWORD_DEFAULT)); 
+            $query->bind_param('ssss', $data['username'], $data['nama'], $data['level'], password_hash($data['password'], PASSWORD_DEFAULT)); 
              
             // eksekusi query untuk menyimpan ke database 
             $query->execute(); 
         } else { 
             // eksekusi query untuk menyimpan ke database 
-            sqlsrv_query($this->db, "insert into {$this->table} (username, nama, level, 
-password) values(?,?,?,?)", array($data['username'], $data['nama'], $data['level'], 
-password_hash($data['password'], PASSWORD_DEFAULT))); 
+            sqlsrv_query($this->db, "insert into {$this->table} (username, nama, level, password) values(?,?,?,?)", array($data['username'], $data['nama'], $data['level'], password_hash($data['password'], PASSWORD_DEFAULT))); 
         } 
-    }
+    } 
     public function getData(){ 
         if($this->driver == 'mysql'){ 
             // query untuk mengambil data dari tabel 
-            return $this->db->query("select * from {$this->table} ")
->fetch_all(MYSQLI_ASSOC); 
+            return $this->db->query("select * from {$this->table} ")->fetch_all(MYSQLI_ASSOC); 
         } else { 
             // query untuk mengambil data dari tabel 
             $query = sqlsrv_query($this->db, "select * from {$this->table}"); 
@@ -65,8 +60,7 @@ password_hash($data['password'], PASSWORD_DEFAULT)));
             return $query->get_result()->fetch_assoc(); 
         } else { 
             // query untuk mengambil data berdasarkan id 
-            $query = sqlsrv_query($this->db, "select * from {$this->table} where user_id = 
-?", [$id]); 
+            $query = sqlsrv_query($this->db, "select * from {$this->table} where user_id = ?", [$id]); 
              
             // ambil hasil query 
             return sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC); 
@@ -76,27 +70,23 @@ password_hash($data['password'], PASSWORD_DEFAULT)));
     public function updateData($id, $data){ 
         if($this->driver == 'mysql'){ 
             // query untuk update data 
-            $query = $this->db->prepare("update {$this->table} set username = ?, nama = ?, 
-level = ?, password = ? where user_id = ?"); 
+            $query = $this->db->prepare("update {$this->table} set username = ?, nama = ?, level = ?, password = ? where user_id = ?"); 
  
             // binding parameter ke query 
-            $query->bind_param('ssssi', $data['username'], $data['nama'], $data['level'], 
-password_hash($data['password'], PASSWORD_DEFAULT), $id); 
+            $query->bind_param('ssssi', $data['username'], $data['nama'], $data['level'], password_hash($data['password'], PASSWORD_DEFAULT), $id); 
  
             // eksekusi query 
             $query->execute(); 
         } else { 
             // query untuk update data 
-            sqlsrv_query($this->db, "update {$this->table} set username = ?, nama = ?, level 
-= ?, password = ? where user_id = ?", [$data['username'], $data['nama'], $data['level'], 
-password_hash($data['password'], PASSWORD_DEFAULT), $id]); 
+            sqlsrv_query($this->db, "update {$this->table} set username = ?, nama = ?, level = ?, password = ? where user_id = ?", [$data['username'], $data['nama'], $data['level'], password_hash($data['password'], PASSWORD_DEFAULT), $id]); 
         } 
     } 
  
     public function deleteData($id){ 
         if($this->driver == 'mysql'){ 
             // query untuk delete data 
-            $query = $this->db->prepare("delete from {$this->table} where user_id = ?"); 
+            $query = $this->db->prepare("delete from {$this->table} where user_id = ?");
             // binding parameter ke query 
             $query->bind_param('i', $id); 
  
@@ -122,10 +112,11 @@ password_hash($data['password'], PASSWORD_DEFAULT), $id]);
             return $query->get_result()->fetch_assoc(); 
         } else { 
             // query untuk mengambil data berdasarkan id 
-            $query = sqlsrv_query($this->db, "select * from {$this->table} where {$column} = ? ", [$keyword]); 
+            $query = sqlsrv_query($this->db, "select * from {$this->table} where {$column} = ?", [$keyword]); 
              
             // ambil hasil query 
             return sqlsrv_fetch_array($query, SQLSRV_FETCH_ASSOC); 
         } 
     } 
-}
+} 
+?>

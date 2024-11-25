@@ -1,15 +1,28 @@
 <?php
 require_once __DIR__ . '/../lib/Connection.php';
-
-// Ambil data kategori menggunakan fungsi
-$kategori = newKategori();
+function getKategori()
+{
+    global $db;
+    $query = "SELECT * FROM m_kategori ORDER BY kategori_nama ASC";
+    $result = sqlsrv_query($db, $query);
+    $kategori = [];
+    if ($result) {
+        while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
+            $kategori[] = $row;
+        }
+    } else {
+        die(print_r(sqlsrv_errors(), true));
+    }
+    return $kategori;
+}
+$kategori = getKategori();
 ?>
 
 <section class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Daftar Buku</h1>
+                <h1>Buku</h1>
             </div>
             <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-right">
@@ -20,7 +33,6 @@ $kategori = newKategori();
         </div>
     </div>
 </section>
-
 <!-- Main content -->
 <section class="content">
     <div class="card">
@@ -28,23 +40,23 @@ $kategori = newKategori();
             <h3 class="card-title">Daftar Buku</h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-md btn-primary" onclick="tambahData()">
-                    Tambah Buku
+                    Tambah
                 </button>
             </div>
         </div>
         <div class="card-body">
             <table class="table table-sm table-bordered table-striped" id="table-data">
                 <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Kode Buku</th>
-                        <th>Nama Buku</th>
-                        <th>Kategori</th>
-                        <th>Jumlah</th>
-                        <th>Deskripsi</th>
-                        <th>Gambar</th>
-                        <th>Aksi</th>
-                    </tr>
+                <tr>
+                    <th style="width: 5%;">No</th>
+                    <th style="width: 5%;">Kategori Buku</th>
+                    <th style="width: 10%;">Kode Buku</th>
+                    <th style="width: 15%;">Nama Buku</th>
+                    <th style="width: 5%;">Jumlah</th>
+                    <th style="width: 38%;">Deskripsi</th>
+                    <th style="width: 5%;">Gambar</th>
+                    <th>Aksi</th>
+                </tr>
                 </thead>
                 <tbody>
                 </tbody>
@@ -52,10 +64,15 @@ $kategori = newKategori();
         </div>
     </div>
 </section>
-
-<!-- Modal Form -->
 <div class="modal fade" id="form-data" style="display: none;" aria-hidden="true">
-    <form action="action/bukuAction.php?act=save" method="post" id="form-tambah" enctype="multipart/form-data">
+    <form action="action/BukuAction.php?act=save" method="post" id="form-tambah">
+        <!-- Ukuran Modal
+            modal-sm : Modal ukuran kecil
+            modal-md : Modal ukuran sedang
+            modal-lg : Modal ukuran besar
+            modal-xl : Modal ukuran sangat besar
+            penerapan setelah class modal-dialog seperti di bawah
+        -->
         <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
@@ -63,38 +80,43 @@ $kategori = newKategori();
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Kode Buku</label>
-                        <input type="text" class="form-control" name="buku_kode" id="buku_kode">
-                    </div>
-                    <div class="form-group">
-                        <label>Nama Buku</label>
-                        <input type="text" class="form-control" name="buku_nama" id="buku_nama">
-                    </div>
-                    <div class="form-group">
-                        <label>Kategori</label>
+                        <label>Kategori Buku</label>
                         <select id="kategori_id" name="kategori_id" class="form-control">
                             <?php if (!empty($kategori)): ?>
-                                <?php foreach ($kategori as $k): ?>
-                                    <option value="<?= htmlspecialchars($k['kategori_id']); ?>">
-                                        <?= htmlspecialchars($k['kategori_nama']); ?>
+                                <?php foreach ($kategori as $id): ?>
+                                    <option value="<?= htmlspecialchars($id['kategori_id']); ?>">
+                                        <?= htmlspecialchars($id['kategori_nama']); ?>
                                     </option>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <option value="">Kategori Tidak Ditemukan</option>
+                                <option value="">-</option>
                             <?php endif; ?>
                         </select>
                     </div>
                     <div class="form-group">
+                        <label>Kode Buku</label>
+                        <input type="text" class="form-control" name="buku_kode"
+                               id="buku_kode">
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Buku</label>
+                        <input type="text" class="form-control" name="buku_nama"
+                               id="buku_nama">
+                    </div>
+                    <div class="form-group">
                         <label>Jumlah</label>
-                        <input type="number" class="form-control" name="jumlah" id="jumlah">
+                        <input type="text" class="form-control" name="jumlah"
+                               id="jumlah">
                     </div>
                     <div class="form-group">
                         <label>Deskripsi</label>
-                        <textarea class="form-control" name="deskripsi" id="deskripsi"></textarea>
+                        <input type="text" class="form-control" name="deskripsi"
+                               id="deskripsi">
                     </div>
                     <div class="form-group">
-                        <label>Gambar (URL)</label>
-                        <input type="url" class="form-control" name="gambar" id="gambar" placeholder="Masukkan URL gambar">
+                        <label>Gambar</label>
+                        <input type="text" class="form-control" name="gambar"
+                               id="gambar">
                     </div>
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -105,14 +127,41 @@ $kategori = newKategori();
         </div>
     </form>
 </div>
-
 <script>
+    // function loadKategori() {
+    //     $.ajax({
+    //         url: 'action/BukuAction.php?act=get_kategori',
+    //         method: 'GET',
+    //         success: function(response) {
+    //             console.log("Data kategori:", response);
+    //             var data = response; // Response otomatis di-parse oleh jQuery jika JSON
+    //             var kategoriSelect = $('#kategori_id');
+
+    //             kategoriSelect.empty();
+    //             kategoriSelect.append('<option value="">Pilih Kategori</option>');
+
+    //             data.forEach(function(kategori) {
+    //                 kategoriSelect.append('<option value="' + kategori.id + '">' + kategori.nama + '</option>');
+    //             });
+    //         },
+    //         error: function(xhr, status, error) {
+    //             console.error("Error loadKategori:", status, error); // Debugging
+    //         }
+    //     });
+    // }
+
+    // // Panggil loadKategori saat halaman siap atau modal ditampilkan
+    // $(document).ready(function() {
+    //     loadKategori();
+    // });
+
+
     function tambahData() {
         $('#form-data').modal('show');
-        $('#form-tambah').attr('action', 'action/bukuAction.php?act=save');
+        $('#form-tambah').attr('action', 'action/BukuAction.php?act=save');
+        $('#kategori_id').val('');
         $('#buku_kode').val('');
         $('#buku_nama').val('');
-        $('#kategori_id').val(''); // Sesuai ID dari select
         $('#jumlah').val('');
         $('#deskripsi').val('');
         $('#gambar').val('');
@@ -120,27 +169,27 @@ $kategori = newKategori();
 
     function editData(id) {
         $.ajax({
-            url: 'action/bukuAction.php?act=get&id=' + id,
+            url: 'action/BukuAction.php?act=get&id=' + id,
             method: 'post',
             success: function(response) {
                 var data = JSON.parse(response);
                 $('#form-data').modal('show');
-                $('#form-tambah').attr('action', 'action/bukuAction.php?act=update&id=' + id);
+                $('#form-tambah').attr('action',
+                    'action/BukuAction.php?act=update&id=' + id);
+                $('#kategori_id').val(data.kategori_id).trigger('change');
                 $('#buku_kode').val(data.buku_kode);
                 $('#buku_nama').val(data.buku_nama);
-                $('#kategori_id').val(data.kategori_id).trigger('change');
                 $('#jumlah').val(data.jumlah);
-                $('#deskripsi').val(data.deskripsi || ''); // Pastikan deskripsi tidak kosong
+                $('#deskripsi').val(data.deskripsi);
                 $('#gambar').val(data.gambar);
             }
         });
     }
 
-
     function deleteData(id) {
         if (confirm('Apakah anda yakin?')) {
             $.ajax({
-                url: 'action/bukuAction.php?act=delete&id=' + id,
+                url: 'action/BukuAction.php?act=delete&id=' + id,
                 method: 'post',
                 success: function(response) {
                     var result = JSON.parse(response);
@@ -153,41 +202,36 @@ $kategori = newKategori();
             });
         }
     }
-
     var tabelData;
     $(document).ready(function() {
         tabelData = $('#table-data').DataTable({
-            ajax: 'action/bukuAction.php?act=load',
+            ajax: 'action/BukuAction.php?act=load',
         });
         $('#form-tambah').validate({
             rules: {
+                kategori_id: {
+                    required: true,
+                    minlength: 1
+                },
                 buku_kode: {
-                    required: true
+                    required: true,
+                    minlength: 2
                 },
                 buku_nama: {
-                    required: true
-                },
-                kategori_id: {
-                    required: true
+                    required: true,
+                    minlength: 5
                 },
                 jumlah: {
                     required: true,
-                    number: true,
-                    min: 1
+                    minlength: 1
                 },
                 deskripsi: {
-                    required: true
+                    required: true,
+                    minlength: 5
                 },
                 gambar: {
-                    url: true
-                },
-            },
-            messages: {
-                kategori_id: {
-                    required: "Kategori harus dipilih."
-                },
-                deskripsi: {
-                    required: "Deskripsi tidak boleh kosong."
+                    required: true,
+                    minlength: 5
                 },
             },
             errorElement: 'span',
@@ -195,24 +239,22 @@ $kategori = newKategori();
                 error.addClass('invalid-feedback');
                 element.closest('.form-group').append(error);
             },
-            highlight: function(element) {
+            highlight: function(element, errorClass, validClass) {
                 $(element).addClass('is-invalid');
             },
-            unhighlight: function(element) {
+            unhighlight: function(element, errorClass, validClass) {
                 $(element).removeClass('is-invalid');
             },
             submitHandler: function(form) {
                 $.ajax({
                     url: $(form).attr('action'),
                     method: 'post',
-                    data: new FormData(form),
-                    processData: false,
-                    contentType: false,
+                    data: $(form).serialize(),
                     success: function(response) {
                         var result = JSON.parse(response);
                         if (result.status) {
                             $('#form-data').modal('hide');
-                            tabelData.ajax.reload();
+                            tabelData.ajax.reload(); // reload data tabel
                         } else {
                             alert(result.message);
                         }
